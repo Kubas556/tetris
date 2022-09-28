@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +8,30 @@ namespace Tetris
 {
     internal class RenderUtils
     {
+        public const int Width = 10;
+        public const int Height = 30;
+
+        public const int BorderWidth = 1;
+        public const int BrickCharWidth = 2;
         public static void DrawAreaBorder()
         {
             Console.SetCursorPosition(0, 0);
             Console.Write("╔");
-            for (int i = 0; i < Program.width * Program.brickCharWidth; i++)
+            for (int i = 0; i < Width * BrickCharWidth; i++)
             {
                 Console.Write("═");
             }
             Console.Write("╗");
-            for (int i = 0; i < Program.height; i++)
+            for (int i = 0; i < Height; i++)
             {
                 Console.SetCursorPosition(0, i + 1);
                 Console.Write("║");
-                Console.SetCursorPosition((Program.width * Program.brickCharWidth) + 1, i + 1);
+                Console.SetCursorPosition((Width * BrickCharWidth) + 1, i + 1);
                 Console.Write("║");
             }
-            Console.SetCursorPosition(0, Program.height + 1);
+            Console.SetCursorPosition(0, Height + 1);
             Console.Write("╚");
-            for (int i = 0; i < Program.width * Program.brickCharWidth; i++)
+            for (int i = 0; i < Width * BrickCharWidth; i++)
             {
                 Console.Write("═");
             }
@@ -39,7 +44,7 @@ namespace Tetris
             {
                 for (int j = 0; j < area.GetLength(1); j++)
                 {
-                    Console.SetCursorPosition(offset + (j * Program.brickCharWidth), 1 + i);
+                    Console.SetCursorPosition(offset + (j * BrickCharWidth), 1 + i);
                     Console.Write(area[i, j] == 1 ? "██" : "  ");
                 }
             }

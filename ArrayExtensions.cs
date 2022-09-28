@@ -18,6 +18,23 @@ namespace Tetris
                 }
             }
         }
+
+        public static void CopyFrom(this byte[,] _array1, byte[][] array2)
+        {
+            for (int i = 0; i < _array1.GetLength(0); i++)
+            {
+                for (int j = 0; j < _array1.GetLength(1); j++)
+                {
+                    if(_array1.GetLength(0) != array2.Length && _array1.GetLength(1) != array2[i].Length)
+                    {
+                        throw new ArgumentException("all arrays must have same length");
+                    }
+
+                    _array1[i, j] = array2[i][j];
+                }
+            }
+        }
+
         public static byte[,] CopyField(this byte[,] _array)
         {
             byte[,] copy = new byte[_array.GetLength(0), _array.GetLength(1)];
@@ -32,6 +49,7 @@ namespace Tetris
             
             return copy;   
         }
+
         public static void ClearField(this byte[,] _array)
         {
             for (int i = 0; i < _array.GetLength(0); i++)
