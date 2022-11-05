@@ -27,6 +27,9 @@ namespace Tetris // Note: actual namespace depends on the project name.
 
             byte[,] lastUncolidedCopy = new byte[Height, Width];
             int collisionCount = 0;
+            DateTime time1 = DateTime.Now;
+            DateTime time2 = DateTime.Now;
+            float deltaTime = 0;
 
             foreach (Shape shape in ShapeFactory.getShapes())
             {
@@ -53,58 +56,58 @@ namespace Tetris // Note: actual namespace depends on the project name.
 
                     //DrawArea(previewCopy, 25);
 
-                    if (!OnGround(shape))
-                    {
-                        if(Collided(copy))
-                        {
-                            _field.CopyFrom(lastUncolidedCopy);
-                            RenderUtils.DrawArea(_field);
-                            collisionCount++;
-                            break;
-                        }
-                        else
-                            RenderUtils.DrawArea(copy);
-                        collisionCount = 0;
-
-                        lastUncolidedCopy.CopyFrom(copy);
-                        System.Threading.Thread.Sleep(10);
-                    }
-                    else
+                    if (OnGround(shape))
                     {
                         _field.CopyFrom(copy);
                         collisionCount = 0;
                         break;
                     }
-                    shape.Location.Y++;
+
+                    if (Collided(copy))
+                    {
+                        _field.CopyFrom(lastUncolidedCopy);
+                        RenderUtils.DrawArea(_field);
+                        collisionCount++;
+                        break;
+                    }
+                    else
+                        RenderUtils.DrawArea(copy);
+                    
+                    collisionCount = 0;
+
+                    lastUncolidedCopy.CopyFrom(copy);
+                    time2 = DateTime.Now;
+                    deltaTime += (time2.Ticks - time1.Ticks) / 10000f;
+                    time1 = time2;
+
+                    if (deltaTime > 100)
+                    {
+                        deltaTime = 0;
+                        shape.Location.Y++;
+                    }
 
 
                     if (Console.KeyAvailable)
                         switch (Console.ReadKey().Key)
-                    {
-                        case ConsoleKey.LeftArrow:
-                            if(shape.Location.X >= 1)
-                                shape.Location.X--;
-                            break;
-                        case ConsoleKey.RightArrow:
-                            if(shape.Location.X + shape.Width < Width)
-                                shape.Location.X++;
-                            break;
-                        case ConsoleKey.UpArrow:
-                            shape.Rotate();
-                            if (shape.Location.X + shape.Width > Width)
-                                shape.Location.X -= ((shape.Location.X + shape.Width) - Width);
-                            break;
-                    }
+                        {
+                            case ConsoleKey.LeftArrow:
+                                if(shape.Location.X >= 1)
+                                    shape.Location.X--;
+                                break;
+                            case ConsoleKey.RightArrow:
+                                if(shape.Location.X + shape.Width < Width)
+                                    shape.Location.X++;
+                                break;
+                            case ConsoleKey.UpArrow:
+                                shape.Rotate();
+                                if (shape.Location.X + shape.Width > Width)
+                                    shape.Location.X -= ((shape.Location.X + shape.Width) - Width);
+                                break;
+                        }
 
-                    System.Threading.Thread.Sleep(100);
+                    //System.Threading.Thread.Sleep(100);
 
                 } while (true);
-
-                if (Console.KeyAvailable)
-                    if (Console.ReadKey().Key == ConsoleKey.Enter)
-                        break;
-                    else
-                        continue;
             }
         }
 
